@@ -10,7 +10,7 @@ class TaskView(CreateAPIView,ListAPIView):
   queryset = Task.objects.all()
   serializer_class = TaskSerializer
   def perform_create(self, serializer):
-        categories = get_object_or_404(Task, self.request.body.categories)
+        categories = get_object_or_404(Task, self.kwargs["categories"])
         serializer.save(user=self.request.user,categories=categories)
 
 class TaskDetailView(RetrieveUpdateDestroyAPIView):
