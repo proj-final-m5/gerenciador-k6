@@ -5,9 +5,20 @@ class TimeCourseChoices(models.TextChoices):
   PM = "PM"
 
 class PriorityChoices(models.TextChoices):
-  baixa = "baixa"
-  media = "média"
-  alta = "alta"
+  baixa = "Baixa"
+  media = "Média"
+  alta = "Alta"
+
+class CategoryChoices(models.TextChoices):
+  lazer = "Lazer"
+  trabalho = "Trabalho"
+  reuniao = "Reunião"
+  familia = "Família"
+  projetos = "Projetos"
+  esportes = "Esportes"
+  tarefas = "Tarefas"
+  saude = "Saúde"
+  festas = "Festas"
 
 
 class Task(models.Model):
@@ -22,5 +33,5 @@ class Task(models.Model):
   priority = models.CharField(max_length=20, choices=PriorityChoices.choices, default=PriorityChoices.baixa)
   guests = models.CharField(max_length=300)
   user = models.ForeignKey("users.User",on_delete=models.CASCADE, related_name="tasks")
-  categories = models.ForeignKey("categories.Category",on_delete=models.CASCADE, related_name="categories")
+  category = models.CharField(max_length=20, choices=CategoryChoices.choices, default=CategoryChoices.tarefas)
   
