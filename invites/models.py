@@ -1,5 +1,6 @@
 from django.db import models
 
+
 class Invite(models.Model):
     class Meta:
         ordering = ["id"]
