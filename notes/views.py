@@ -6,7 +6,6 @@ from rest_framework.generics import (
 from .serializers import NoteSerializer, Note
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from .permissions import IsPermission, IsUser
-import ipdb
 
 
 # Create your views here.
