@@ -1,7 +1,4 @@
-
-from django.urls import path, include
+from django.urls import path
 from . import views
 
-urlpatterns = [
-    path('', views.invite, name='invite')
-]
+urlpatterns = [path("", views.invite, name="invite")]
