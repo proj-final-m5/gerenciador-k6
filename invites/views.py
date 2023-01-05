@@ -2,7 +2,7 @@ from django.http import HttpResponse
 from django.core.mail import send_mail
 
 
-def invite(request, assunto, link, *args):
+def invite(request, assunto, link, email):
     send_mail(
         # Campos do email
         assunto,
@@ -11,6 +11,6 @@ def invite(request, assunto, link, *args):
         # Email de quem irá enviar
         "equipe_k6@outlook.com",
         # Lista de emails que irão receber o convite
-        [args],
+        [email],
     )
     return HttpResponse("Email enviado com sucesso")

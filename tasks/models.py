@@ -36,7 +36,7 @@ class Task(models.Model):
     priority = models.CharField(
         max_length=20, choices=PriorityChoices.choices, default=PriorityChoices.baixa
     )
-    guests = models.CharField(max_length=300)
+    # guests = models.CharField(max_length=300)
     user = models.ForeignKey(
         "users.User", on_delete=models.CASCADE, related_name="tasks"
     )

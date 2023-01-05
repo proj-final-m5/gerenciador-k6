@@ -7,11 +7,12 @@ from rest_framework_simplejwt.authentication import JWTAuthentication
 from .models import Contact
 from .permissions import IsAccountOwner
 from .serializers import ContactSerializer
+from rest_framework.permissions import IsAuthenticated
 
 
 class ContactCreateView(CreateAPIView):
     authentication_classes = [JWTAuthentication]
-    permission_classes = [IsAccountOwner]
+    permission_classes = [IsAuthenticated]
     serializer_class = ContactSerializer
 
     def perform_create(self, serializer):
