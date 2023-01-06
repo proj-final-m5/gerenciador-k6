@@ -21,7 +21,7 @@ class ContactCreateView(CreateAPIView):
 
 class ContactListView(ListAPIView):
     authentication_classes = [JWTAuthentication]
-    permission_classes = [IsAccountOwner]
+    permission_classes = [IsAuthenticated, IsAccountOwner]
     serializer_class = ContactSerializer
 
     def get_queryset(self):
@@ -31,6 +31,6 @@ class ContactListView(ListAPIView):
 
 class ContactDetailView(RetrieveUpdateDestroyAPIView):
     authentication_classes = [JWTAuthentication]
-    permission_classes = [IsAccountOwner]
+    permission_classes = [IsAuthenticated, IsAccountOwner]
     serializer_class = ContactSerializer
     queryset = Contact.objects.all()
