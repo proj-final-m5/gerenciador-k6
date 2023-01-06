@@ -1,12 +1,11 @@
-from django.http import Http404
 from rest_framework import serializers
 
 from contacts.models import Contact
 from invites.models import Invite
+from users.models import User
 from utils.send_invite import send_invite
 
 from .models import Task
-from users.models import User
 
 
 class TaskSerializer(serializers.ModelSerializer):
@@ -52,10 +51,14 @@ class TaskSerializer(serializers.ModelSerializer):
                 user_id=user_obj.id, email=email))
 
             if not contacts:
-                raise Http404("Email not found in contacts")
-                # raise Http404(" %s not found in contacts" % email)
+                raise serializers.ValidationError(
+                    {"detail": f"Email {email} not found in contacts"})
 
-            task_obj = Task.objects.create(**validated_data, user=user_obj)
+        task_obj = Task.objects.create(**validated_data, user=user_obj)
+
+        for email in email_list:
+            contacts = list(Contact.objects.filter(
+                user_id=user_obj.id, email=email))
 
             invite_obj = Invite.objects.create(
                 contact=contacts[0], task=task_obj)
