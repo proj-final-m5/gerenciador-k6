@@ -22,6 +22,6 @@ urlpatterns = [
     path("api/", include("users.urls")),
     path("api/", include("tasks.urls")),
     path("api/", include("notes.urls")),
-    path("email/", include("invites.urls")),
+    path("api/", include("invites.urls")),
     path("api/", include("contacts.urls")),
 ]

@@ -54,6 +54,7 @@ MY_APPS = [
     "notes",
     "tasks",
     "contacts",
+    "invites",
 ]
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + MY_APPS

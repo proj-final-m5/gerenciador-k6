@@ -1,16 +1,13 @@
 from django.http import HttpResponse
-from django.core.mail import send_mail
+from django.shortcuts import get_object_or_404
+from rest_framework.views import APIView, Request, Response
+
+from .models import Invite
 
 
-def invite(request, assunto, link, *args):
-    send_mail(
-        # Campos do email
-        assunto,
-        # Msg padrão do convite para a task
-        "Clique no link abaixo para aceitar o convite" + link,
-        # Email de quem irá enviar
-        "equipe_k6@outlook.com",
-        # Lista de emails que irão receber o convite
-        [args],
-    )
-    return HttpResponse("Email enviado com sucesso")
+class InviteView(APIView):
+    def get(self, request: Request, invite_id: int) -> Response:
+        invite = get_object_or_404(Invite, id=invite_id)
+        invite.is_accept = True
+        invite.save()
+        return HttpResponse("Compromisso aceito com sucesso")
