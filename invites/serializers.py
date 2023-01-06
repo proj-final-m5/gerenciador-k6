@@ -7,7 +7,18 @@ class InviteSerializer(serializers.ModelSerializer):
         model = Invite
         fields = [
             "id",
-            "contact",
-            "task",
+            "contact_id",
+            "task_id",
             "is_accept",
         ]
+
+    def create(self, validated_data: dict) -> Invite:
+        return Invite.objects.create(**validated_data)
+
+    def update(self, instance: Invite, validated_data: dict) -> Invite:
+        for key, value in validated_data.items():
+            setattr(instance, key, value)
+
+        instance.save()
+
+        return instance

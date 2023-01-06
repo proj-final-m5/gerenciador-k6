@@ -27,7 +27,8 @@ class CategoryChoices(models.TextChoices):
 class Task(models.Model):
     name = models.CharField(max_length=50)
     description = models.CharField(max_length=127)
-    time_course = models.CharField(max_length=20, choices=TimeCourseChoices.choices)
+    time_course = models.CharField(
+        max_length=20, choices=TimeCourseChoices.choices)
     schedule_time = models.CharField(max_length=20)
     schedule_date = models.CharField(max_length=20)
     status = models.BooleanField(default=False)
@@ -36,7 +37,7 @@ class Task(models.Model):
     priority = models.CharField(
         max_length=20, choices=PriorityChoices.choices, default=PriorityChoices.baixa
     )
-    # guests = models.CharField(max_length=300)
+    guests = models.CharField(max_length=500)
     user = models.ForeignKey(
         "users.User", on_delete=models.CASCADE, related_name="tasks"
     )
