@@ -9,7 +9,6 @@ https://docs.djangoproject.com/en/4.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.1/ref/settings/
 """
-
 from decouple import config
 from pathlib import Path
 from datetime import timedelta
@@ -132,9 +131,10 @@ SIMPLE_JWT = {
     "REFRESH_TOKEN_LIFETIME": timedelta(days=15),
 }
 
+
 SPECTACULAR_SETTINGS = {
     "TITLE": "K6 documentation",
-    "DESCRIPTION": "API routes",
+    "DESCRIPTION": "dOCUMENTO DO GERENCIADOR K6",
     "VERSION": "1.0.0",
     "SERVE_INCLUDE_SCHEMA": False,
 }
