@@ -3,7 +3,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import Request, Response, status
 from rest_framework_simplejwt.authentication import JWTAuthentication
 
-from contacts.permissions import IsAccountOwner
+from .permissions import IsUser
 
 from .models import Task
 from .serializers import TaskSerializer
@@ -29,6 +29,6 @@ class TaskView(ListCreateAPIView):
 
 class TaskDetailView(RetrieveUpdateDestroyAPIView):
     authentication_classes = [JWTAuthentication]
-    permission_classes = [IsAccountOwner]
+    permission_classes = [IsAuthenticated, IsUser]
     queryset = Task.objects.all()
     serializer_class = TaskSerializer
