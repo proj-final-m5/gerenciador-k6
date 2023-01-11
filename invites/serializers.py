@@ -10,6 +10,7 @@ class InviteSerializer(serializers.ModelSerializer):
             "contact_id",
             "task_id",
             "is_accept",
+            "is_admin",
         ]
 
     def create(self, validated_data: dict) -> Invite:
