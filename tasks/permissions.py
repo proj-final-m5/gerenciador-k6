@@ -12,9 +12,10 @@ class IsUser(permissions.BasePermission):
             return True
 
         invites = list(Invite.objects.filter(task_id=obj.id))
-
         for invite in invites:
-            if ((request.user.email == invite.contact.email and invite.is_admin) or (request.user.email == invite.contact.email and request.method == "GET")):
+            if (request.user.email == invite.contact.email and invite.is_admin) or (
+                request.user.email == invite.contact.email and request.method == "GET"
+            ):
                 return True
 
         return False
