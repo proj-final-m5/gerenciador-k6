@@ -1,17 +1,21 @@
 from rest_framework import serializers
-
 from contacts.models import Contact
 from invites.models import Invite
 from users.models import User
 from utils.send_invite import check_email, send_invite_from_list
-
 from .models import Task
 
 
-class TaskSerializer(serializers.ModelSerializer):
+class GuestSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+    is_admin = serializers.BooleanField()
 
-    guests = serializers.ListSerializer(
-        child=serializers.CharField(), write_only=True)
+
+class TaskSerializer(serializers.ModelSerializer):
+    guests = GuestSerializer(
+        many=True,
+        write_only=True,
+    )
     guests_list = serializers.SerializerMethodField()
 
     class Meta:
@@ -29,7 +33,7 @@ class TaskSerializer(serializers.ModelSerializer):
             "priority",
             "category",
             "guests",
-            "guests_list"
+            "guests_list",
         ]
         read_only_fields = ["id", "created_at", "updated_at"]
 
@@ -43,12 +47,12 @@ class TaskSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data: dict) -> Task:
         user_obj = validated_data.pop("owner")
+        guest_list = validated_data["guests"]
 
-        email_list = validated_data["guests"]
-        check_email(email_list, user_obj.id)
+        check_email(guest_list, user_obj.id)
 
         task_obj = Task.objects.create(**validated_data, user=user_obj)
-        send_invite_from_list(email_list, task_obj, user_obj)
+        send_invite_from_list(guest_list, task_obj, user_obj)
 
         return task_obj
 
@@ -59,8 +63,7 @@ class TaskSerializer(serializers.ModelSerializer):
         try:
             email_list = validated_data["guests"]
         except KeyError:
-            raise serializers.ValidationError(
-                {"detail": f"guests field is required"})
+            raise serializers.ValidationError({"detail": f"guests field is required"})
 
         check_email(email_list, instance.user_id)
 

@@ -7,6 +7,8 @@ class Invite(models.Model):
 
     is_accept = models.BooleanField(default=False)
 
+    is_admin = models.BooleanField(default=False)
+
     contact = models.ForeignKey(
         "contacts.Contact",
         on_delete=models.CASCADE,
