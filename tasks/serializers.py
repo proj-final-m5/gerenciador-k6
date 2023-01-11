@@ -3,7 +3,7 @@ from rest_framework import serializers
 from contacts.models import Contact
 from invites.models import Invite
 from users.models import User
-from utils.send_invite import send_invite
+from utils.send_invite import check_email, send_invite_from_list
 
 from .models import Task
 
@@ -45,36 +45,29 @@ class TaskSerializer(serializers.ModelSerializer):
         user_obj = validated_data.pop("owner")
 
         email_list = validated_data["guests"]
-
-        for email in email_list:
-            contacts = list(Contact.objects.filter(
-                user_id=user_obj.id, email=email))
-
-            if not contacts:
-                raise serializers.ValidationError(
-                    {"detail": f"Email {email} not found in contacts"})
+        check_email(email_list, user_obj.id)
 
         task_obj = Task.objects.create(**validated_data, user=user_obj)
-
-        for email in email_list:
-            contacts = list(Contact.objects.filter(
-                user_id=user_obj.id, email=email))
-
-            invite_obj = Invite.objects.create(
-                contact=contacts[0], task=task_obj)
-            invite_obj.save()
-
-            assunto = task_obj.category
-            user = User.objects.get(pk=task_obj.user_id)
-            schedule = f"Olá, o usuário {user.username}, agendou a {task_obj.name}, no dia {task_obj.schedule_date} às {task_obj.schedule_time}"
-            link = f"http://127.0.0.1:8000/api/user/invite/{invite_obj.id}/"
-            send_invite(assunto, schedule, link, email)
+        send_invite_from_list(email_list, task_obj, user_obj)
 
         return task_obj
 
-    def update(self, instance, validated_data):
+    def update(self, instance: Task, validated_data: dict) -> Task:
+
         for key, value in validated_data.items():
             setattr(instance, key, value)
+        try:
+            email_list = validated_data["guests"]
+        except KeyError:
+            raise serializers.ValidationError(
+                {"detail": f"guests field is required"})
 
-            instance.save()
-            return instance
+        check_email(email_list, instance.user_id)
+
+        Invite.objects.filter(task_id=instance.id).delete()
+
+        user_obj = User.objects.get(id=instance.user_id)
+        send_invite_from_list(email_list, instance, user_obj)
+
+        instance.save()
+        return instance
